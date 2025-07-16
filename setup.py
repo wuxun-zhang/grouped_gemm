@@ -27,29 +27,32 @@ cwd = Path(os.path.dirname(os.path.abspath(__file__)))
 
 nvcc_flags = [
     "-std=c++17",  # NOTE: CUTLASS requires c++17
-    "-DENABLE_BF16", # Enable BF16 for cuda_version >= 11
+    "-DENABLE_BF16",  # Enable BF16 for cuda_version >= 11
     # "-DENABLE_FP8",  # Enable FP8 for cuda_version >= 11.8
 ]
 
 if device_capability:
-    nvcc_flags.extend([
-        f"--generate-code=arch=compute_{device_capability},code=sm_{device_capability}",
-        f"-DGROUPED_GEMM_DEVICE_CAPABILITY={device_capability}",
-    ])
+    nvcc_flags.extend(
+        [
+            f"--generate-code=arch=compute_{device_capability},code=sm_{device_capability}",
+            f"-DGROUPED_GEMM_DEVICE_CAPABILITY={device_capability}",
+        ]
+    )
 
 ext_modules = [
     CUDAExtension(
         "grouped_gemm_backend",
-        ["csrc/ops.cu", "csrc/grouped_gemm.cu", "csrc/sinkhorn.cu", "csrc/permute.cu"],
-        include_dirs = [
-            f"{cwd}/third_party/cutlass/include/"
+        [
+            "csrc/ops.cu",
+            "csrc/grouped_gemm.cu",
+            "csrc/sinkhorn.cu",
+            "csrc/permute.cu",
         ],
+        include_dirs=[f"{cwd}/third_party/cutlass/include/", f"{cwd}/csrc"],
         extra_compile_args={
-            "cxx": [
-                "-fopenmp", "-fPIC", "-Wno-strict-aliasing"
-            ],
+            "cxx": ["-fopenmp", "-fPIC", "-Wno-strict-aliasing"],
             "nvcc": nvcc_flags,
-        }
+        },
     )
 ]
 
@@ -69,4 +72,5 @@ setup(
     ext_modules=ext_modules,
     cmdclass={"build_ext": BuildExtension},
     install_requires=["absl-py", "numpy", "torch"],
+    include_package_data=True,
 )
