@@ -56,12 +56,15 @@ ext_modules = [
     )
 ]
 
+
 setup(
-    name="grouped_gemm",
+    name="nv_grouped_gemm",
     version="1.1.4",
     author="Trevor Gale, Jiang Shao, Shiqing Fan",
     author_email="tgale@stanford.edu, jiangs@nvidia.com, shiqingf@nvidia.com",
     description="GEMM Grouped",
+    long_description=(Path(__file__).parent / "README.md").read_text(encoding="utf-8"),
+    long_description_content_type="text/markdown",
     url="https://github.com/fanshiqing/grouped_gemm",
     classifiers=[
         "Programming Language :: Python :: 3",
