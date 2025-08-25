@@ -87,6 +87,11 @@ jobs:
           method: "network"
           sub-packages: '["nvcc"]'
 
+      - name: Install libcusparse
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcusparse-dev-12-8 libcublas-dev-12-8
+
       - name: Install PyTorch ${{ inputs.torch-version }}+cu${{ inputs.cuda-version }}
         run: |
           pip install --upgrade pip
