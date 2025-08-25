@@ -97,9 +97,11 @@ def get_wheel_url():
     # Determine wheel URL based on CUDA version, torch version, python version and OS
     wheel_filename = f"{PACKAGE_NAME}-{grouped_gemm_version}+cu{cuda_version}torch{torch_version}cxx11abi{cxx11_abi}-{python_version}-{python_version}-{platform_name}.whl"
 
-    return BASE_WHEEL_URL.format(
+    wheel_url = BASE_WHEEL_URL.format(
         tag_name=f"v{grouped_gemm_version}", wheel_name=wheel_filename
     )
+
+    return wheel_url, wheel_filename
 
 
 if device_capability:
