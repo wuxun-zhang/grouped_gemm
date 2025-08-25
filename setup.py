@@ -14,6 +14,13 @@ from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 # Supported NVIDIA GPU architectures.
 NVIDIA_SUPPORTED_ARCHS = {"7.0", "7.5", "8.0", "8.6", "8.9", "9.0"}
 FORCE_BUILD = os.getenv("GROUPED_GEMM_FORCE_BUILD", "FALSE") == "TRUE"
+FORCE_CXX11_ABI = os.getenv("FLASH_ATTENTION_FORCE_CXX11_ABI", "FALSE") == "TRUE"
+
+# HACK: The compiler flag -D_GLIBCXX_USE_CXX11_ABI is set to be the same as
+# torch._C._GLIBCXX_USE_CXX11_ABI
+# https://github.com/pytorch/pytorch/blob/8472c24e3b5b60150096486616d98b7bea01500b/torch/utils/cpp_extension.py#L920
+if FORCE_CXX11_ABI:
+    torch._C._GLIBCXX_USE_CXX11_ABI = True
 
 # TORCH_CUDA_ARCH_LIST can have one or more architectures,
 # e.g. "9.0" or "7.0 7.2 7.5 8.0 8.6 8.7 9.0+PTX". Here,
