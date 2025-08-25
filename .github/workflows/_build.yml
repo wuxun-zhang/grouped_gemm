@@ -85,7 +85,11 @@ jobs:
           # default method is "local", and we're hitting some error with caching for CUDA 11.8 and 12.1
           # method: ${{ (inputs.cuda-version == '11.8.0' || inputs.cuda-version == '12.1.0') && 'network' || 'local' }}
           method: "network"
-          sub-packages: '["nvcc", "cusparse", "cublas", "curand", "cufft", "cusolver"]'
+
+      - name: Install libcusparse
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nvidia-cublas-cu12  nvidia-cusolver-cu12 nvidia-cusparse-cu12
 
       - name: Install PyTorch ${{ inputs.torch-version }}+cu${{ inputs.cuda-version }}
         run: |
