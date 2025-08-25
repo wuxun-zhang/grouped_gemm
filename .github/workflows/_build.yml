@@ -89,7 +89,7 @@ jobs:
       - name: Install libcusparse
         run: |
           sudo apt-get update
-          sudo apt-get install -y nvidia-cublas-cu12  nvidia-cusolver-cu12 nvidia-cusparse-cu12
+          sudo apt-get install -y libcusparse-dev-12-8 libcusolver-dev-12-8 libcublas-dev-12-8
 
       - name: Install PyTorch ${{ inputs.torch-version }}+cu${{ inputs.cuda-version }}
         run: |
