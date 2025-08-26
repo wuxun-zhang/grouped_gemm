@@ -14,7 +14,8 @@ from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 # Supported NVIDIA GPU architectures.
 NVIDIA_SUPPORTED_ARCHS = {"7.0", "7.5", "8.0", "8.6", "8.9", "9.0"}
 FORCE_BUILD = os.getenv("GROUPED_GEMM_FORCE_BUILD", "FALSE") == "TRUE"
-FORCE_CXX11_ABI = os.getenv("FLASH_ATTENTION_FORCE_CXX11_ABI", "FALSE") == "TRUE"
+FORCE_CXX11_ABI = os.getenv("GROUPED_GEMM_FORCE_CXX11_ABI", "FALSE") == "TRUE"
+SKIP_CUDA_BUILD = os.getenv("GROUPED_GEMM_SKIP_CUDA_BUILD", "FALSE") == "TRUE"
 
 # HACK: The compiler flag -D_GLIBCXX_USE_CXX11_ABI is set to be the same as
 # torch._C._GLIBCXX_USE_CXX11_ABI
@@ -119,22 +120,25 @@ if device_capability:
         ]
     )
 
-ext_modules = [
-    CUDAExtension(
-        "grouped_gemm_backend",
-        [
-            "csrc/ops.cu",
-            "csrc/grouped_gemm.cu",
-            "csrc/sinkhorn.cu",
-            "csrc/permute.cu",
-        ],
-        include_dirs=[f"{cwd}/third_party/cutlass/include/", f"{cwd}/csrc"],
-        extra_compile_args={
-            "cxx": ["-fopenmp", "-fPIC", "-Wno-strict-aliasing"],
-            "nvcc": nvcc_flags,
-        },
+ext_modules = []
+
+if not SKIP_CUDA_BUILD:
+    ext_modules.append(
+        CUDAExtension(
+            "grouped_gemm_backend",
+            [
+                "csrc/ops.cu",
+                "csrc/grouped_gemm.cu",
+                "csrc/sinkhorn.cu",
+                "csrc/permute.cu",
+            ],
+            include_dirs=[f"{cwd}/third_party/cutlass/include/", f"{cwd}/csrc"],
+            extra_compile_args={
+                "cxx": ["-fopenmp", "-fPIC", "-Wno-strict-aliasing"],
+                "nvcc": nvcc_flags,
+            },
+        )
     )
-]
 
 
 class CachedWheelsCommand(_bdist_wheel):
