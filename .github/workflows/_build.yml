@@ -90,7 +90,7 @@ jobs:
         run: |
           CUDA_VERSION=$(echo ${{ inputs.cuda-version }} | awk -F \. {'print $1 "-" $2'})
           sudo apt-get update
-          sudo apt-get install -y libcusparse-dev-$CUDA_VERSION libcusolver-dev-$CUDA_VERSION libcublas-dev-$CUDA_VERSION
+          sudo apt-get install -y libcusparse-$CUDA_VERSION libcusolver-$CUDA_VERSION 
           sudo apt-get clean
 
       - name: Install PyTorch ${{ inputs.torch-version }}+cu${{ inputs.cuda-version }}
