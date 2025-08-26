@@ -86,10 +86,11 @@ jobs:
           # method: ${{ (inputs.cuda-version == '11.8.0' || inputs.cuda-version == '12.1.0') && 'network' || 'local' }}
           method: "network"
 
-      - name: Install libcusparse
+      - name: Install additional CUDA libraries
         run: |
+          CUDA_VERSION=$(echo ${{ inputs.cuda-version }} | awk -F \. {'print $1 "-" $2'})
           sudo apt-get update
-          sudo apt-get install -y libcusparse-dev-12-8 libcusolver-dev-12-8 libcublas-dev-12-8
+          sudo apt-get install -y libcusparse-dev-$CUDA_VERSION libcusolver-dev-$CUDA_VERSION libcublas-dev-$CUDA_VERSION
           sudo apt-get clean
 
       - name: Install PyTorch ${{ inputs.torch-version }}+cu${{ inputs.cuda-version }}
