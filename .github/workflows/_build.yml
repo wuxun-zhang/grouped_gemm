@@ -90,6 +90,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libcusparse-dev-12-8 libcusolver-dev-12-8 libcublas-dev-12-8
+          sudo apt-get clean
 
       - name: Install PyTorch ${{ inputs.torch-version }}+cu${{ inputs.cuda-version }}
         run: |
