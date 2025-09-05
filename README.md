@@ -25,6 +25,30 @@ Grouped GEMM for MoE
 
 # Steps for Using
 
+## Intel GPU usage
+
+### Set up oneAPI and PyTorch XPU env
+
+```bash
+# require oneAPI 2025.2
+source /opt/intel/oneapi/setvars.sh
+
+# install latest PyTorch XPU nightly build
+pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightly/xpu
+```
+
+### pip install
+
+```bash
+pip install --no-build-isolation -e . -v
+```
+
+### Test
+
+```bash
+python grouped_gemm/ops_test.py
+```
+
 ## pip install
 ```bash
 pip install --verbose git+https://github.com/fanshiqing/grouped_gemm@main
